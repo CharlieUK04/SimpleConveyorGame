@@ -43,8 +43,6 @@ public class ConveyorHandler : MonoBehaviour
     {
         for (int i = 0; i < conveyorMateirals.Length; i++)
         {
-            //conveyorMateirals[i] = new ConveyorMateiral();
-            Debug.Log(conveyorMateirals[i]);
             conveyorMateirals[i].baseMaterial.SetTextureOffset("_BaseMap", new Vector2(conveyorMateirals[i].currentOffset, 0f));
             conveyorMateirals[i].flippedMaterial.SetTextureOffset("_BaseMap", new Vector2(conveyorMateirals[i].currentOffset, 0f));
             
