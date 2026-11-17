@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a3d52409c69c97e00a017dc3feccd853, type: 2}
     - target: {fileID: 919132149155446097, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
       propertyPath: m_Name
-      value: VA_Conveyor_Belt_Short
+      value: ShortConveyor
       objectReference: {fileID: 0}
     - target: {fileID: 4541832314783391825, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -79,5 +79,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5322502813135475906}
   m_SourcePrefab: {fileID: 100100000, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
+--- !u!23 &3439936463559978729 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -3842211284070962662, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
+  m_PrefabInstance: {fileID: 7282499600363291891}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7625098968331532706 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
+  m_PrefabInstance: {fileID: 7282499600363291891}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5322502813135475906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7625098968331532706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c4f3692165c4770b9156543bba45f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConveyorBelt
+  speed: 0
+  beltRenderer: {fileID: 3439936463559978729}
+  isFlipped: 0
