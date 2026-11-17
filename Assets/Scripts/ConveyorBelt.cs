@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ConveyorBelt : MonoBehaviour
 {
-    private static ConveyorHandler _conveyorHandler;
+    private static ConveyorManager _conveyorHandler;
     
     [Tooltip("Value is based on the ConveyorHandlers list of available speeds, not the speed itself")]
     [SerializeField] private int speed = 0;
@@ -13,13 +13,13 @@ public class ConveyorBelt : MonoBehaviour
 
     private void Awake()
     {
-        _conveyorHandler = FindAnyObjectByType<ConveyorHandler>();
+        _conveyorHandler = FindAnyObjectByType<ConveyorManager>();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-            beltRenderer.material = _conveyorHandler.GetConveyorMaterial(speed, isFlipped);
+            beltRenderer.sharedMaterial = _conveyorHandler.GetConveyorMaterial(speed, isFlipped);
     }
 
     // Update is called once per frame

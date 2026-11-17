@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ConveyorHandler : MonoBehaviour
+public class ConveyorManager : MonoBehaviour
 {
     [SerializeField] private Material conveyorMaterialSet;
 
