@@ -262,8 +262,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.26266932, y: 0.5214337, z: 0.036116965}
-  m_Center: {x: -0.00039827824, y: 0.00000011920929, z: -0.23860282}
+  m_Size: {x: 0.17641854, y: 0.19994406, z: 0.03611695}
+  m_Center: {x: 0.011331677, y: -0.003718868, z: -0.23860282}
 --- !u!114 &5696208517958829137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,3 +279,4 @@ MonoBehaviour:
   currentConveyorBelt: {fileID: 0}
   progressAcrossBelt: 0
   isFalling: 0
+  itemYOffset: 0

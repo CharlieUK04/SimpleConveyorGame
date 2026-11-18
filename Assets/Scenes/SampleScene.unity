@@ -523,6 +523,42 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 5abc8808-167c-45e5-ab58-c9d55a86d2a9
     m_ActionName: 'BaseActions/ChangeRotation[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 992387583}
+        m_TargetAssemblyTypeName: ControlsManager, Assembly-CSharp
+        m_MethodName: OnDelete
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f56722e3-f8f4-4d17-9d94-a88afb72c6a4
+    m_ActionName: 'BaseActions/Delete[/Mouse/rightButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c3196232-b724-4cab-b069-75db4ef20bac
+    m_ActionName: 'BaseActions/ChangeSpeed[/Keyboard/a,/Keyboard/s]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 992387583}
+        m_TargetAssemblyTypeName: ControlsManager, Assembly-CSharp
+        m_MethodName: ChangeFloor
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 23e84471-a881-4073-98ba-8619a86f2e57
+    m_ActionName: 'BaseActions/ChangePlane[/Keyboard/q,/Keyboard/w]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: BaseActions
@@ -586,6 +622,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConveyorHandler
   conveyorMaterialSet: {fileID: 2100000, guid: a3d52409c69c97e00a017dc3feccd853, type: 2}
+  animationSpeedMultiplier: 1.5
   availableSpeeds:
   - 1
   - 2
@@ -624,9 +661,14 @@ MonoBehaviour:
     conveyorSizeWxL: {x: 1, y: 2}
   - conveyorPrefab: {fileID: 5837131691439512291, guid: 87344a4d58f7ad556917cd24ba60187b, type: 3}
     conveyorSizeWxL: {x: 1, y: 3}
+  - conveyorPrefab: {fileID: 9172613250098930836, guid: 7a6895ccbea7902899481f46436618fe, type: 3}
+    conveyorSizeWxL: {x: 1, y: 2}
   previewThickness: 0.1
   previewOffsetY: 0.5
   canPlaceMaterial: {fileID: 2100000, guid: 91da344e17a9b0c5aad81566a697a48f, type: 2}
+  gridSize: {x: 18, y: 25}
+  totalFloorCount: 4
+  floorYOffset: 0.7
 --- !u!1 &1924898492
 GameObject:
   m_ObjectHideFlags: 0
@@ -740,120 +782,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1176817377731428224
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5802992092327137031, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_Name
-      value: VA_Cardboard_Box
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.7016685
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.976
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.517
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071069
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.70710677
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6612284960550098365, guid: 867eb30d01a9df122873313d1d486141, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 867eb30d01a9df122873313d1d486141, type: 3}
---- !u!1001 &8609268925938477301
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.8513453
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.000000008816649
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.9576466
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8288355672725313850, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8668856705671660416, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
-      propertyPath: m_Name
-      value: VA_Slim_Can
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 03308e47ed73bbb26804988a81eb736c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -864,5 +792,3 @@ SceneRoots:
   - {fileID: 1924898496}
   - {fileID: 992387584}
   - {fileID: 1060015750}
-  - {fileID: 1176817377731428224}
-  - {fileID: 8609268925938477301}

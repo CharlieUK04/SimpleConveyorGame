@@ -167,6 +167,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7412420894006782622}
   m_SourcePrefab: {fileID: 100100000, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
+--- !u!1 &2570850929023470317 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5097473902972063262, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
+  m_PrefabInstance: {fileID: 7282499600363291891}
+  m_PrefabAsset: {fileID: 0}
 --- !u!23 &3439936463559978729 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3842211284070962662, guid: a94fae4c6b045d2428680aa3816c2665, type: 3}
@@ -196,7 +201,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ConveyorBelt
   speed: 0
   beltRenderer: {fileID: 3439936463559978729}
-  isFlipped: 0
+  conveyorLegs:
+  - {fileID: 2570850929023470317}
 --- !u!65 &7412420894006782622
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -216,5 +222,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7669314, y: 0.11442053, z: 1.6781859}
-  m_Center: {x: 0.015698671, y: 0.51513296, z: 0.021903753}
+  m_Size: {x: 0.7669314, y: 0.11442053, z: 2}
+  m_Center: {x: 0.015698671, y: 0.51513296, z: 0}

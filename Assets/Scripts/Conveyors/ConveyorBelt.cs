@@ -6,9 +6,11 @@ public class ConveyorBelt : MonoBehaviour
 {
     [Tooltip("Value is based on the ConveyorHandlers list of available speeds, not the speed itself")]
     [SerializeField] private int speed = 0;
-
-    private const float centringSpeedRelativeToSpeed = 2f;
     [SerializeField] private Renderer beltRenderer;
+    [SerializeField] private GameObject[] conveyorLegs;
+
+    //The speed the item centres on the belt, relative to the speed of the belt
+    private const float centringSpeedRelativeToSpeed = 1.35f;
 
     private static ConveyorManager _conveyorHandler;
     private Vector3 startPosition = Vector3.zero;
@@ -31,6 +33,7 @@ public class ConveyorBelt : MonoBehaviour
         endPosition = transform.Find("End").position;
         beltLength = Vector3.Distance(startPosition, endPosition);
         beltDirHorizontal = Vector3.ProjectOnPlane(endPosition - startPosition, Vector3.up).normalized;
+        
     }
     
     
@@ -38,6 +41,11 @@ public class ConveyorBelt : MonoBehaviour
     void Start()
     {
             beltRenderer.sharedMaterial = _conveyorHandler.GetConveyorMaterial(speed);
+            if (transform.position.y > 1)
+            {
+                foreach(GameObject conveyorLeg in conveyorLegs)
+                    conveyorLeg.SetActive(false);
+            }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -94,10 +102,10 @@ public class ConveyorBelt : MonoBehaviour
             idealItemPosition = Vector3.Lerp(startPosition, endPosition, allItems[i].progressAcrossBelt);
             idealItemPosition.y += allItems[i].itemYOffset;
             
-            itemPosition = Vector3.MoveTowards(itemPosition, idealItemPosition, Time.deltaTime * (centringSpeedRelativeToSpeed * speed));
+            itemPosition = Vector3.MoveTowards(itemPosition, idealItemPosition, Time.deltaTime * (centringSpeedRelativeToSpeed * _conveyorHandler.getAvailableSpeed(speed)));
             itemPosition.y = idealItemPosition.y;
             
-            allItems[i].transform.position = idealItemPosition;
+            allItems[i].transform.position = itemPosition;
             
             
         }

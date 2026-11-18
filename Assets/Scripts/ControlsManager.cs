@@ -53,5 +53,21 @@ public class ControlsManager : MonoBehaviour
             }
         }
     }
+
+    public void OnDelete(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _conveyorSpawner.DeleteConveyor();
+        }
+    }
+
+    public void ChangeFloor(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _conveyorSpawner.ChangeFloor(context.ReadValue<float>() > 0.5f);
+        }
+    }
     
 }

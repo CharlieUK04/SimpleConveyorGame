@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 985098344704850119}
   serializedVersion: 2
   m_LocalRotation: {x: 0.18320088, y: -0, z: -0, w: 0.98307556}
-  m_LocalPosition: {x: 0, y: 1.41, z: -1.206}
+  m_LocalPosition: {x: 0, y: 1.408, z: -1.199}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -122,7 +122,7 @@ Transform:
   m_GameObject: {fileID: 9048812883367751496}
   serializedVersion: 2
   m_LocalRotation: {x: 0.18320088, y: -0, z: -0, w: 0.98307556}
-  m_LocalPosition: {x: 0, y: 0.425, z: 1.344}
+  m_LocalPosition: {x: 0, y: 0.382, z: 1.455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -238,6 +238,11 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -3842211284070962662, guid: 7989c86c18bcd5c47b3895478d1e8aee, type: 3}
   m_PrefabInstance: {fileID: 6755612235938162610}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1980770236044487084 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5097473902972063262, guid: 7989c86c18bcd5c47b3895478d1e8aee, type: 3}
+  m_PrefabInstance: {fileID: 6755612235938162610}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5837131691439512291 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7989c86c18bcd5c47b3895478d1e8aee, type: 3}
@@ -257,7 +262,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ConveyorBelt
   speed: 0
   beltRenderer: {fileID: 1688138169277713832}
-  isFlipped: 0
+  conveyorLegs:
+  - {fileID: 1980770236044487084}
 --- !u!4 &6506145602498003033 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7989c86c18bcd5c47b3895478d1e8aee, type: 3}
