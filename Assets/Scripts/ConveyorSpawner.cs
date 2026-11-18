@@ -18,7 +18,9 @@ public class ConveyorSpawner : MonoBehaviour
 
     private GameObject placementPreview;
     private Vector2 previewScale = Vector2.zero;
+    private Vector3 previewLocation = Vector3.zero;
     [SerializeField] private float previewThickness = .1f;
+    [SerializeField] private float previewOffsetY = .5f;
     [SerializeField] private Material canPlaceMaterial;
     
     //HashSet to hold all the occupied cells, to prevent double placing
@@ -27,6 +29,7 @@ public class ConveyorSpawner : MonoBehaviour
     readonly HashSet<Vector2Int> occupiedCell = new HashSet<Vector2Int>();
 
     [Serializable]
+    [Tooltip("The box collider on the first prefab element determines the cell size, based on its X size")]
     private class Conveyor
     {
         [SerializeField] private GameObject  conveyorPrefab;
@@ -74,9 +77,11 @@ public class ConveyorSpawner : MonoBehaviour
         //Switches the x and y if the rotation is up or down
         previewScale = new Vector2(cellSize * GetRequiredCells(currentlySelected).x,
             cellSize * GetRequiredCells(currentlySelected).y);
+        previewLocation = GridPosInWorldSpace(WorldToCellPos(MousePosInWorldSpace()));
+        previewLocation.y = spawnPlaneTransform.position.y +  previewOffsetY;
 
         placementPreview.transform.localScale = new Vector3(previewScale.x, previewThickness, previewScale.y);
-        placementPreview.transform.position = GridPosInWorldSpace(WorldToCellPos(MousePosInWorldSpace()));
+        placementPreview.transform.position = previewLocation;
 
     }
 
@@ -94,8 +99,8 @@ public class ConveyorSpawner : MonoBehaviour
         MarkOccupied(placementPositionGrid, currentlySelected);
         Vector3 placementPositionWorld = GridPosInWorldSpace(placementPositionGrid);
         
-        GameObject currentConveyor = Instantiate(allConveyorPrefabs[currentlySelected].getConveyorPrefab(), placementPositionWorld, new Quaternion());
-        currentConveyor.transform.Rotate(new Vector3(0, (float)(int)currentRotation, 0), Space.Self);
+        Quaternion currentConveyorRotation = Quaternion.Euler(0f, (float)(int)currentRotation, 0f);
+        GameObject currentConveyor = Instantiate(allConveyorPrefabs[currentlySelected].getConveyorPrefab(), placementPositionWorld, currentConveyorRotation);
         Debug.Log("Conveyor placed");
 
     }
