@@ -30,7 +30,7 @@ public class ConveyorSpawner : MonoBehaviour
     private int currentlySelectedConveyor = 0;
     private int currentlySelectedSpeed = 0;
     private int currentFloor = 0;
-    private float getCurrentFloorY() {return spawnPlaneTransform.position.y + (floorYOffset * currentFloor);}
+    public float getCurrentFloorY() {return spawnPlaneTransform.position.y + (floorYOffset * currentFloor);}
     private ConveyorRotationEnum currentRotation = ConveyorRotationEnum.Left;
 
     private float cellSize;
@@ -39,11 +39,12 @@ public class ConveyorSpawner : MonoBehaviour
     private Vector2 previewScale = Vector2.zero;
     private Vector3 previewLocation = Vector3.zero;
     
-    //HashSet to hold all the occupied cells, to prevent double placing
-    //HashSets are more efficient than arrays or lists for this use case,
-    //since we only need to check if the cell is in use or not.
-    //readonly HashSet<Vector2Int> occupiedCell = new HashSet<Vector2Int>();
+    //3D Array holding all the conveyor information for each cell and floors
     private PlacedConveyorInfo[,,] grid;
+    
+    //Returns the bottom left and bottom right of the grid, used for cinemachine camera
+    public Vector3 GridMinWorld => new Vector3(-gridOffset.x * cellSize, 0f, -gridOffset.y * cellSize);
+    public Vector3 GridMaxWorld => new Vector3((gridSize.x - gridOffset.x) * cellSize, 0f, (gridSize.y - gridOffset.y) * cellSize);
     
 
     [Serializable]
