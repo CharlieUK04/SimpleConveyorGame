@@ -9,39 +9,45 @@ public class ConveyorBelt : MonoBehaviour
 
     private const float centringSpeedRelativeToSpeed = 2f;
     [SerializeField] private Renderer beltRenderer;
-    [SerializeField] private bool isFlipped = false;
 
     private static ConveyorManager _conveyorHandler;
     private Vector3 startPosition = Vector3.zero;
     private Vector3 endPosition = Vector3.zero;
+    
     private float beltLength = 0f;
     private float currentProgress = 0f;
-
+    private Vector3 itemPosition = Vector3.zero;
+    private Vector3 beltDirHorizontal = Vector3.zero;
+    private Vector3 idealItemPosition = Vector3.zero;
+    
     private List<Item> allItems = new List<Item>();
     
     private void Awake()
     {
         _conveyorHandler = FindAnyObjectByType<ConveyorManager>();
+        
+        //We use awake to calculate movement values, since ontriggerenter can fire before start
         startPosition = transform.Find("Start").position;
         endPosition = transform.Find("End").position;
         beltLength = Vector3.Distance(startPosition, endPosition);
+        beltDirHorizontal = Vector3.ProjectOnPlane(endPosition - startPosition, Vector3.up).normalized;
     }
     
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-            beltRenderer.sharedMaterial = _conveyorHandler.GetConveyorMaterial(speed, isFlipped);
+            beltRenderer.sharedMaterial = _conveyorHandler.GetConveyorMaterial(speed);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Switched to conveyor " + gameObject.name);
         if (other.TryGetComponent<Item>(out var outItem))
         {
+            Debug.Log($"Switched to conveyor {gameObject.name} with speed {speed}");
             allItems.Add(outItem);
-            outItem.progressAcrossBelt = GetProgressFromPosition(outItem.transform.position);
             outItem.currentConveyorBelt = this;
+            outItem.progressAcrossBelt = GetProgressFromPosition(outItem.transform.position);
             //outItem.transform.position = new Vector3(outItem.transform.position.x, startPosition.y + outItem.itemYOffset, outItem.transform.position.z);
         }
     }
@@ -66,17 +72,34 @@ public class ConveyorBelt : MonoBehaviour
     {
         for (int i = allItems.Count - 1; i >= 0; i--)
         {
-            
-            allItems[i].progressAcrossBelt += (_conveyorHandler.getAvailableSpeed(speed)) * Time.deltaTime / beltLength;
-            Debug.Log(allItems[i].progressAcrossBelt);
-            Vector3 itemPosition = Vector3.Lerp(startPosition, endPosition, allItems[i].progressAcrossBelt);
-            itemPosition.y = itemPosition.y + allItems[i].itemYOffset;
-            allItems[i].transform.position = itemPosition;
-            
             if (allItems[i].currentConveyorBelt.gameObject != this.gameObject)
             {
                 allItems.Remove(allItems[i]);
+                continue;
+            }                     //We use 0.99f instead of 1f to account for floating point rounding errors
+            else if (allItems[i].progressAcrossBelt > 0.99f && allItems[i].currentConveyorBelt == this)
+            {
+                allItems[i].currentConveyorBelt = null;
+                allItems[i].progressAcrossBelt = 0f;
+                allItems.Remove(allItems[i]);
+                continue;
             }
+            
+            //Increments the items progress across the belt over time, starting from the position the item reaches the belt
+            allItems[i].progressAcrossBelt += (_conveyorHandler.getAvailableSpeed(speed)) * Time.deltaTime / beltLength;
+            
+            itemPosition = allItems[i].transform.position;
+            //The item position on the belt based solely off of the progress between the start and end points
+            //Includes the items Y offset
+            idealItemPosition = Vector3.Lerp(startPosition, endPosition, allItems[i].progressAcrossBelt);
+            idealItemPosition.y += allItems[i].itemYOffset;
+            
+            itemPosition = Vector3.MoveTowards(itemPosition, idealItemPosition, Time.deltaTime * (centringSpeedRelativeToSpeed * speed));
+            itemPosition.y = idealItemPosition.y;
+            
+            allItems[i].transform.position = idealItemPosition;
+            
+            
         }
     }
 }
