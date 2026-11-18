@@ -92,8 +92,8 @@ public class ConveyorBelt : MonoBehaviour
             {
                 allItems.Remove(allItems[i]);
                 continue;
-            }                     //We use 0.99f instead of 1f to account for floating point rounding errors
-            else if (allItems[i].progressAcrossBelt > 0.99f && allItems[i].currentConveyorBelt == this)
+            }                     
+            else if (allItems[i].progressAcrossBelt >= 1f && allItems[i].currentConveyorBelt == this)
             {
                 allItems[i].currentConveyorBelt = null;
                 allItems[i].progressAcrossBelt = 0f;

@@ -81,19 +81,19 @@ public class ConveyorSpawner : MonoBehaviour
 
     private void Awake()
     {
+        spawnPlaneTransform = GameObject.FindGameObjectWithTag("ConveyorSpawnPlane").transform;
         grid = new PlacedConveyorInfo[gridSize.x, gridSize.y, totalFloorCount];
         gridOffset =  new Vector2Int(Mathf.CeilToInt(gridSize.x / 2), Mathf.CeilToInt(gridSize.y / 2));
+        cellSize = allConveyorPrefabs[0].getConveyorPrefab().GetComponent<BoxCollider>().size.x;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mainCamera = Camera.main;
-        spawnPlaneTransform = GameObject.FindGameObjectWithTag("ConveyorSpawnPlane").transform;
+        
         _conveyorManager = GameObject.FindAnyObjectByType<ConveyorManager>();
         ChangeFloor(false);
-
-        cellSize = allConveyorPrefabs[0].getConveyorPrefab().GetComponent<BoxCollider>().size.x;
 
         //Creates the preview square for placing conveyors
         placementPreview = GameObject.CreatePrimitive(PrimitiveType.Cube);
