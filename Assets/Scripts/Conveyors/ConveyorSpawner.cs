@@ -2,8 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class ConveyorSpawner : MonoBehaviour
 {
@@ -14,14 +17,20 @@ public class ConveyorSpawner : MonoBehaviour
     [SerializeField] private Vector2Int gridSize = new Vector2Int(18, 25);
     [SerializeField] private int totalFloorCount = 4;
     [SerializeField] private float floorYOffset = 0.75f;
+    [SerializeField] private Image conveyorSelectionUI;
+    [SerializeField] private Image conveyorSpeedUI;
+    [SerializeField] private TextMeshProUGUI selectedFloorTextUI;
     private Vector2Int gridOffset;
     
     private Camera mainCamera;
     private Transform spawnPlaneTransform;
     private Plane spawnPlane;
+    private ConveyorManager _conveyorManager;
     
-    private int currentlySelected = 0;
+    private int currentlySelectedConveyor = 0;
+    private int currentlySelectedSpeed = 0;
     private int currentFloor = 0;
+    private float getCurrentFloorY() {return spawnPlaneTransform.position.y + (floorYOffset * currentFloor);}
     private ConveyorRotationEnum currentRotation = ConveyorRotationEnum.Left;
 
     private float cellSize;
@@ -45,6 +54,8 @@ public class ConveyorSpawner : MonoBehaviour
         [SerializeField] private Vector2Int conveyorSizeWxL = new Vector2Int(1, 3);
         public GameObject getConveyorPrefab() {return conveyorPrefab;}
         public Vector2Int getConveyorSize() {return conveyorSizeWxL;}
+        [SerializeField] private Sprite conveyorIcon;
+        public Sprite getConveyorIcon() {return conveyorIcon;}
     }
 
     private class PlacedConveyorInfo
@@ -78,7 +89,8 @@ public class ConveyorSpawner : MonoBehaviour
     {
         mainCamera = Camera.main;
         spawnPlaneTransform = GameObject.FindGameObjectWithTag("ConveyorSpawnPlane").transform;
-        spawnPlane = new Plane(spawnPlaneTransform.up, spawnPlaneTransform.position);
+        _conveyorManager = GameObject.FindAnyObjectByType<ConveyorManager>();
+        ChangeFloor(false);
 
         cellSize = allConveyorPrefabs[0].getConveyorPrefab().GetComponent<BoxCollider>().size.x;
 
@@ -101,10 +113,10 @@ public class ConveyorSpawner : MonoBehaviour
     //Updates the position and scale of the placement preview based on the currently selected conveyor
     private void UpdatePreview()
     {
-        previewScale = new Vector2(cellSize * allConveyorPrefabs[currentlySelected].getConveyorSize().x,
-            cellSize * allConveyorPrefabs[currentlySelected].getConveyorSize().y);
-        previewLocation = GridPosInWorldSpace(GetPlacementOrigin(MousePosInWorldSpace(), GetConveyorDimensions(currentlySelected)));
-        previewLocation.y = spawnPlaneTransform.position.y + previewOffsetY + (currentFloor * floorYOffset);
+        previewScale = new Vector2(cellSize * allConveyorPrefabs[currentlySelectedConveyor].getConveyorSize().x,
+            cellSize * allConveyorPrefabs[currentlySelectedConveyor].getConveyorSize().y);
+        previewLocation = GridPosInWorldSpace(GetPlacementOrigin(MousePosInWorldSpace(), GetConveyorDimensions(currentlySelectedConveyor)));
+        previewLocation.y = getCurrentFloorY() + previewOffsetY;
 
         placementPreview.transform.localScale = new Vector3(previewScale.x, previewThickness, previewScale.y);
         placementPreview.transform.position = previewLocation;
@@ -114,21 +126,22 @@ public class ConveyorSpawner : MonoBehaviour
 
     public void SpawnConveyor()
     {
-        Vector2Int placementPositionGrid = GetPlacementOrigin(MousePosInWorldSpace(), GetConveyorDimensions(currentlySelected));
+        Vector2Int placementPositionGrid = GetPlacementOrigin(MousePosInWorldSpace(), GetConveyorDimensions(currentlySelectedConveyor));
         
         //Debug.Log(placementPositionGrid);
-        if (IsOccupied(placementPositionGrid, GetConveyorDimensions(currentlySelected)))
+        if (IsOccupied(placementPositionGrid, GetConveyorDimensions(currentlySelectedConveyor)))
         {
             Debug.Log("Cell Occupied");
             return;
         }
 
         Vector3 placementPositionWorld = GridPosInWorldSpace(placementPositionGrid);
-        placementPositionWorld.y = currentFloor * floorYOffset;
+        placementPositionWorld.y = getCurrentFloorY();
         
         Quaternion currentConveyorRotation = Quaternion.Euler(0f, (float)(int)currentRotation, 0f);
-        GameObject currentConveyor = Instantiate(allConveyorPrefabs[currentlySelected].getConveyorPrefab(), placementPositionWorld, currentConveyorRotation);
-        MarkOccupied(currentConveyor, GetRequiredSCells(currentlySelected, placementPositionGrid));
+        GameObject currentConveyor = Instantiate(allConveyorPrefabs[currentlySelectedConveyor].getConveyorPrefab(), placementPositionWorld, currentConveyorRotation);
+        MarkOccupied(currentConveyor, GetRequiredSCells(currentlySelectedConveyor, placementPositionGrid));
+        currentConveyor.GetComponent<ConveyorBelt>().SetSpeed(currentlySelectedSpeed);
         Debug.Log("Conveyor placed");
 
     }
@@ -136,11 +149,11 @@ public class ConveyorSpawner : MonoBehaviour
     public void DeleteConveyor()
     {
         Vector2Int deletionPositionGrid = WorldToCellPos(MousePosInWorldSpace());
-        if (!IsOccupied(deletionPositionGrid, new Vector2Int(1, 1)))
+        PlacedConveyorInfo info = grid[deletionPositionGrid.x, deletionPositionGrid.y, currentFloor];
+        if (!IsOccupied(deletionPositionGrid, new Vector2Int(1, 1)) || info == null)
         {
             return;
         }
-        PlacedConveyorInfo info = grid[deletionPositionGrid.x, deletionPositionGrid.y, currentlySelected];
         Vector2Int[] cells = info.getOccupiedCells();
         for (int i = 0; i < cells.Length; i++)
         {
@@ -152,8 +165,9 @@ public class ConveyorSpawner : MonoBehaviour
 
     public void ChangeSelection(bool increment)
     {
-        currentlySelected += increment ? 1 : -1;
-        currentlySelected = Mathf.Clamp(currentlySelected, 0, allConveyorPrefabs.Length - 1); //Subtract 1 due to length starting at 1 and array starting at 0
+        currentlySelectedConveyor += increment ? 1 : -1;
+        currentlySelectedConveyor = Mathf.Clamp(currentlySelectedConveyor, 0, allConveyorPrefabs.Length - 1); //Subtract 1 due to length starting at 1 and array starting at 0
+        conveyorSelectionUI.sprite = allConveyorPrefabs[currentlySelectedConveyor].getConveyorIcon();
         //Debug.Log(currentlySelected + " " + allConveyorPrefabs.Length);
     }
 
@@ -164,9 +178,17 @@ public class ConveyorSpawner : MonoBehaviour
 
     public void ChangeFloor(bool increment)
     {
-        Vector3 newPlanePosition = new Vector3(spawnPlaneTransform.position.x, spawnPlaneTransform.position.y + (currentFloor * floorYOffset), spawnPlaneTransform.position.z);
-        spawnPlane = new Plane(spawnPlaneTransform.up, newPlanePosition);
         currentFloor = math.clamp(increment ? currentFloor + 1 : currentFloor - 1, 0, totalFloorCount - 1);
+        Vector3 newPlanePosition = new Vector3(spawnPlaneTransform.position.x, getCurrentFloorY(), spawnPlaneTransform.position.z);
+        spawnPlane = new Plane(spawnPlaneTransform.up, newPlanePosition);
+        selectedFloorTextUI.text = (currentFloor + 1).ToString();
+    }
+
+    public void ChangeSpeed(bool increment)
+    {
+        currentlySelectedSpeed = math.clamp(increment ? currentlySelectedSpeed + 1 : currentlySelectedSpeed - 1, 0,
+            _conveyorManager.getTotalSpeeds() - 1);
+        conveyorSpeedUI.sprite = _conveyorManager.getSpeedImage(currentlySelectedSpeed);
     }
     
     void MarkOccupied(GameObject conveyorObject, Vector2Int[] occupiedCells)
@@ -185,9 +207,9 @@ public class ConveyorSpawner : MonoBehaviour
     private Vector3 GridPosInWorldSpace(Vector2Int  gridPos)
     {
         return new Vector3(
-            ((gridPos.x - gridOffset.x) * cellSize) + (GetConveyorDimensions(currentlySelected).x * cellSize / 2f),
-            spawnPlaneTransform.position.y + (currentFloor * floorYOffset),
-            ((gridPos.y - gridOffset.y) * cellSize) + (GetConveyorDimensions(currentlySelected).y * cellSize / 2f)
+            ((gridPos.x - gridOffset.x) * cellSize) + (GetConveyorDimensions(currentlySelectedConveyor).x * cellSize / 2f),
+            getCurrentFloorY(),
+            ((gridPos.y - gridOffset.y) * cellSize) + (GetConveyorDimensions(currentlySelectedConveyor).y * cellSize / 2f)
         );
     }
     
@@ -208,15 +230,15 @@ public class ConveyorSpawner : MonoBehaviour
     public Vector2Int WorldToCellPos(Vector3 worldPos)
     {
         return new Vector2Int(
-            Mathf.FloorToInt(worldPos.x / cellSize) + gridOffset.x,
-            Mathf.FloorToInt(worldPos.z / cellSize) + gridOffset.y);
+            math.clamp(Mathf.FloorToInt(worldPos.x / cellSize) + gridOffset.x, 0, gridSize.x - 1),
+            math.clamp(Mathf.FloorToInt(worldPos.z / cellSize) + gridOffset.y, 0, gridSize.y - 1));
     }
     
     public Vector2Int GetPlacementOrigin(Vector3 worldPos, Vector2Int conveyorSize)
     {
         return new Vector2Int(
-            Mathf.RoundToInt((worldPos.x / cellSize) - (conveyorSize.x / 2f)) + gridOffset.x,
-            Mathf.RoundToInt((worldPos.z / cellSize) - (conveyorSize.y / 2f)) + gridOffset.y);
+            math.clamp(Mathf.RoundToInt((worldPos.x / cellSize) - (conveyorSize.x / 2f)) + gridOffset.x, 0, gridSize.x - 1),
+            math.clamp(Mathf.RoundToInt((worldPos.z / cellSize) - (conveyorSize.y / 2f)) + gridOffset.y, 0, gridSize.y - 1));
     }
 
     public Vector2Int GetConveyorDimensions(int conveyorID)
@@ -256,7 +278,7 @@ public class ConveyorSpawner : MonoBehaviour
             for (int y = 0; y < sizeToCheck.y; y++)
             {
                 Vector2Int cell = origin + new Vector2Int(x, y);
-                if (grid[cell.x, cell.y, currentFloor] != null) return true;
+                if (cell.x >= gridSize.x || cell.y >=gridSize.y || cell.x < 0 || cell.y < 0 || grid[cell.x, cell.y, currentFloor] != null) return true;
             }
         }
         return false;

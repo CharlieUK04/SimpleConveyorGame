@@ -70,4 +70,12 @@ public class ControlsManager : MonoBehaviour
         }
     }
     
+    public void ChangeSpeed(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _conveyorSpawner.ChangeSpeed(context.ReadValue<float>() > 0.5f);
+        }
+    }
+    
 }

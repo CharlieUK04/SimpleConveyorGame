@@ -5,14 +5,14 @@ using UnityEngine;
 public class ConveyorBelt : MonoBehaviour
 {
     [Tooltip("Value is based on the ConveyorHandlers list of available speeds, not the speed itself")]
-    [SerializeField] private int speed = 0;
+    public int speed = 0;
     [SerializeField] private Renderer beltRenderer;
     [SerializeField] private GameObject[] conveyorLegs;
 
     //The speed the item centres on the belt, relative to the speed of the belt
     private const float centringSpeedRelativeToSpeed = 1.35f;
 
-    private static ConveyorManager _conveyorHandler;
+    private static ConveyorManager _conveyorManager;
     private Vector3 startPosition = Vector3.zero;
     private Vector3 endPosition = Vector3.zero;
     
@@ -26,7 +26,7 @@ public class ConveyorBelt : MonoBehaviour
     
     private void Awake()
     {
-        _conveyorHandler = FindAnyObjectByType<ConveyorManager>();
+        _conveyorManager = FindAnyObjectByType<ConveyorManager>();
         
         //We use awake to calculate movement values, since ontriggerenter can fire before start
         startPosition = transform.Find("Start").position;
@@ -40,14 +40,20 @@ public class ConveyorBelt : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-            beltRenderer.sharedMaterial = _conveyorHandler.GetConveyorMaterial(speed);
-            if (transform.position.y > 1)
+            if (transform.position.y > .25f)
             {
                 foreach(GameObject conveyorLeg in conveyorLegs)
                     conveyorLeg.SetActive(false);
             }
     }
 
+    public void SetSpeed(int setSpeed)
+    {
+        speed = setSpeed;
+        beltRenderer.sharedMaterial = _conveyorManager.GetConveyorMaterial(speed);
+        Debug.Log(speed);
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<Item>(out var outItem))
@@ -80,6 +86,8 @@ public class ConveyorBelt : MonoBehaviour
     {
         for (int i = allItems.Count - 1; i >= 0; i--)
         {
+            if (i > allItems.Count - 1)
+                continue;
             if (allItems[i].currentConveyorBelt.gameObject != this.gameObject)
             {
                 allItems.Remove(allItems[i]);
@@ -94,7 +102,7 @@ public class ConveyorBelt : MonoBehaviour
             }
             
             //Increments the items progress across the belt over time, starting from the position the item reaches the belt
-            allItems[i].progressAcrossBelt += (_conveyorHandler.getAvailableSpeed(speed)) * Time.deltaTime / beltLength;
+            allItems[i].progressAcrossBelt += (_conveyorManager.getAvailableSpeed(speed)) * Time.deltaTime / beltLength;
             
             itemPosition = allItems[i].transform.position;
             //The item position on the belt based solely off of the progress between the start and end points
@@ -102,7 +110,7 @@ public class ConveyorBelt : MonoBehaviour
             idealItemPosition = Vector3.Lerp(startPosition, endPosition, allItems[i].progressAcrossBelt);
             idealItemPosition.y += allItems[i].itemYOffset;
             
-            itemPosition = Vector3.MoveTowards(itemPosition, idealItemPosition, Time.deltaTime * (centringSpeedRelativeToSpeed * _conveyorHandler.getAvailableSpeed(speed)));
+            itemPosition = Vector3.MoveTowards(itemPosition, idealItemPosition, Time.deltaTime * (centringSpeedRelativeToSpeed * _conveyorManager.getAvailableSpeed(speed)));
             itemPosition.y = idealItemPosition.y;
             
             allItems[i].transform.position = itemPosition;
