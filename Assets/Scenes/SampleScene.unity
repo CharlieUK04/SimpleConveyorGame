@@ -1253,7 +1253,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 992387583}
         m_TargetAssemblyTypeName: ControlsManager, Assembly-CSharp
-        m_MethodName: ChangeSpeed
+        m_MethodName: OnChangeSpeed
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1269,7 +1269,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 992387583}
         m_TargetAssemblyTypeName: ControlsManager, Assembly-CSharp
-        m_MethodName: ChangeFloor
+        m_MethodName: OnChangeFloor
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

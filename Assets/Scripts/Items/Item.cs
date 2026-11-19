@@ -7,7 +7,7 @@ public class Item : MonoBehaviour
     [HideInInspector] public float progressAcrossBelt = 0f;
     [HideInInspector] public bool isFalling = false;
     [HideInInspector] public float itemYOffset = 0f;
-    private Vector3 velocity = Vector3.zero;
+    private Vector3 _velocity = Vector3.zero;
 
     private void Awake()
     {
@@ -18,7 +18,7 @@ public class Item : MonoBehaviour
     void Start()
     {
         isFalling = true;
-        velocity = Vector3.zero;
+        _velocity = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -26,8 +26,8 @@ public class Item : MonoBehaviour
     {
         if (currentConveyorBelt != null) return;
 
-        velocity += Physics.gravity * Time.deltaTime;
-        transform.position += velocity * Time.deltaTime;
+        _velocity += Physics.gravity * Time.deltaTime;
+        transform.position += _velocity * Time.deltaTime;
 
         if (transform.position.y < -10f)
             Destroy(gameObject);

@@ -62,7 +62,7 @@ public class ControlsManager : MonoBehaviour
         }
     }
 
-    public void ChangeFloor(InputAction.CallbackContext context)
+    public void OnChangeFloor(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
@@ -70,7 +70,7 @@ public class ControlsManager : MonoBehaviour
         }
     }
     
-    public void ChangeSpeed(InputAction.CallbackContext context)
+    public void OnChangeSpeed(InputAction.CallbackContext context)
     {
         if (context.performed)
         {

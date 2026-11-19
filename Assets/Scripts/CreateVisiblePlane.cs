@@ -9,8 +9,8 @@ public class CreateVisiblePlane : MonoBehaviour
     {
         _conveyorSpawner = GameObject.FindAnyObjectByType<ConveyorSpawner>();
         
-        Vector3 min = _conveyorSpawner.GridMinWorld;
-        Vector3 max = _conveyorSpawner.GridMaxWorld;
+        Vector3 min = _conveyorSpawner.gridMinWorld;
+        Vector3 max = _conveyorSpawner.gridMaxWorld;
 
         Vector3 center = (min + max) / 2f;
         Vector3 size = max - min;

@@ -5,23 +5,23 @@ using Random = UnityEngine.Random;
 public class ItemSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject[] spawnObjects;
-    [SerializeField] float timeBetweenSpawnsSeconds;
-    private float timeLeftTillSpawnSeconds = 100f;
+    [SerializeField] private float TimeBetweenSpawnsSeconds;
+    private float TimeUntilNextSpawnSeconds = 100f;
 
     private void Start()
     {
-        timeLeftTillSpawnSeconds = timeBetweenSpawnsSeconds;
+        TimeUntilNextSpawnSeconds = TimeBetweenSpawnsSeconds;
     }
 
     // Update is called once per frame
     void Update()
     {
-        timeLeftTillSpawnSeconds -= Time.deltaTime;
-        if (timeLeftTillSpawnSeconds <= 0)
+        TimeUntilNextSpawnSeconds -= Time.deltaTime;
+        if (TimeUntilNextSpawnSeconds <= 0)
         {
             int spawnObject = Random.Range(0, spawnObjects.Length);
             GameObject currentObject = Instantiate(spawnObjects[spawnObject], transform.position, spawnObjects[spawnObject].transform.rotation);
-            timeLeftTillSpawnSeconds = timeBetweenSpawnsSeconds;
+            TimeUntilNextSpawnSeconds = TimeBetweenSpawnsSeconds;
         }
     }
 }
