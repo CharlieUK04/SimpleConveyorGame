@@ -112,10 +112,12 @@ This issue happened since the floor height was being set before the floor was ch
 #### Items falling through the conveyors
 When items moved from one conveyor belt to another, they would sometimes randomly fall through the gap. This happened due to a slight gap between the conveyor triggers that detects the item. This issue was increased by dropping the item when it gets above the progress of 0.99 instead of 1. Initially this was done due to the assumption that floating point rounding errors may cause the progress to never reach 1, however, due to the progress being constantly incremented, it always surpasses 1 until that check.
 
-##Improvements
-####Modifier Conveyors
+## Improvements
+#### Modifier Conveyors
 Modifier conveyors could be added that would change the rotation or colour of the items that enter it, which could pave the way for adding goals and achievements, such as making a specific combination of the two. This gives the game more accomplishment despite being a sandbox focused game.
-####Economy
+#### Economy
 One item that would benefit this project is an economy, with a sell conveyor incrementing your money, and each conveyor and item costing money. This could be paired with modifier conveyors, incentivising the player to modify the items in as many ways as they can to increase their profit. 
-####Curved Conveyors
-Due to the assets provided, curved conveyors couldn't be added, although this would be a great addition to the game. This would require a rework of the conveyor movement code, as currently it only has a start and end position, making smooth curves impossible. 
+#### Curved Conveyors
+Due to the assets provided, curved conveyors couldn't be added, although this would be a great addition to the game. This would require a rework of the conveyor movement code, as currently it only has a start and end position, making smooth curves impossible.
+#### Sounds and music
+Since no sound effects or music were provided, they were unable to be added into the game. However, if this project were to be worked on further, copyright free sound effects and songs would be sourced or created, which would give this game much more feedback, and make the items feel alot more realistic
