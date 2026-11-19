@@ -104,7 +104,7 @@ SimpleConveyorGame/
                 └── VA_Slim_Can.fbx
 ```
 
-##Troubleshooting and bug fixing
+## Troubleshooting and bug fixing
 #### Conveyor Belts overlapping
 One issue that came up during the creation of this game was the conveyor belts being able to be placed so that they would overlap. This was caused by the occupied cells being incorrectly calculated. The fix to this was flip the x and y of the dimensions if the conveyor is facing up or down, to ensure it calculates the right cells to occupy.
 #### Floors above 1 placing objects with an offset from the mouse
