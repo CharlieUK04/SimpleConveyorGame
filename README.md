@@ -31,8 +31,9 @@ Install the Linux zip, unzip it, and run `LinuxBuild.x86_64`. You may need to en
 ## Building from source
 #### Prerequisites  
 - Unity 6000.3.20f1
-#### Installation Steps  
-Either click open project and select the project in Unity 6000.3.20f1, or select `add project from disk` in the Unity Hub
+#### Installation Steps
+Install the project from github, or pull it with git LFS installed. Importing the project from repo into Unity hub may cause errors with large files.
+Then either click open project and select the project in Unity 6000.3.20f1, or select `add project from disk` in the Unity Hub
 Unity should auto install all required packages from the Unity Registry, otherwise install them in Package Manager.
 #### Building
 At the top of the Unity window, navigate to File > Build Profiles (or press Shift+Ctrl+B), Ensure you've selected the right build platform, and click Build.
