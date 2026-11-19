@@ -39,7 +39,7 @@ public class ConveyorSpawner : MonoBehaviour
     //3D Array holding all the conveyor information for each cell and floors
     private PlacedConveyorInfo[,,] _grid;
     
-    //Returns the bottom left and bottom right of the grid, used for cinemachine camera
+    //Returns the bottom left and bottom right of the grid, used for cinemachine camera and CreateVisiblePlain
     public Vector3 gridMinWorld => new Vector3(-_gridOffset.x * _cellSize, 0f, -_gridOffset.y * _cellSize);
     public Vector3 gridMaxWorld => new Vector3((gridSize.x - _gridOffset.x) * _cellSize, 0f, (gridSize.y - _gridOffset.y) * _cellSize);
     
